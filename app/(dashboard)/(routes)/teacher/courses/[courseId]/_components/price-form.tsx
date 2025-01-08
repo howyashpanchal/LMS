@@ -27,7 +27,6 @@ const formSchema = z.object({
 interface PriceFormProps {
   initialData: Course;
   courseId: string;
-  options: { label: string; value: string }[];
 }
 export const PriceForm = ({ initialData, courseId }: PriceFormProps) => {
   const router = useRouter();
