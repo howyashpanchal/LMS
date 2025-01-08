@@ -5,17 +5,19 @@ import { ourFileRouter } from "@/app/api/uploadthing/core";
 import toast from "react-hot-toast";
 
 interface FileUploadProps {
-  onChangeAction: (url?: string) => void;
+  onChange: (url?: string) => void;
   endpoint: keyof typeof ourFileRouter;
 }
 
-export const FileUpload = ({ onChangeAction, endpoint }: FileUploadProps) => {
+export const FileUpload = ({ onChange, endpoint }: FileUploadProps) => {
   return (
     <>
       <UploadDropzone
         endpoint={endpoint}
         onClientUploadComplete={(res) => {
-          onChangeAction(res?.[0].url);
+          onChange(res?.[0].url);
+          toast.success("File uploaded successfully");
+          console.log("File uploaded successfully:", res);
         }}
         onUploadError={(error: Error) => {
           toast.error(`${error?.message}`);
