@@ -11,17 +11,17 @@ const handleAuth = async () => {
 
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
-    courseImage : f({ image : {maxFileSize:"4MB", maxFileCount : 1} })
-        .middleware(() => handleAuth())
-        .onUploadComplete(({ file }) => {
-            console.log(`File uploaded: ${file.name}`);
-        }),
-    courseAttachment : f(["text", "image", "video", "audio", "pdf"])
-        .middleware(() => handleAuth())
-        .onUploadComplete(()=> {}),
-    chapterVideo: f({video: {maxFileCount:1, maxFileSize:"512GB"} })
-        .middleware(() => handleAuth())
-        .onUploadComplete(()=> {}),
+    courseImage : f({image: {maxFileSize : "4MB" , maxFileCount : 1}})
+    .middleware(() => handleAuth())
+    .onUploadComplete(() => {}),
+
+    courseAttachment : f(["text", "image", "pdf", "video", "audio"])
+    .middleware(() => handleAuth())
+    .onUploadComplete(() => {}),
+
+    chapterVideo : f({video : {maxFileSize : "512GB" , maxFileCount : 1}})
+    .middleware(() => handleAuth())
+    .onUploadComplete(() => {}),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;
