@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 import { Course } from "@prisma/client";
 import Image from "next/image";
 import { FileUpload } from "@/components/file-upload";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const formSchema = z.object({
   imageUrl: z.string().min(1, {
@@ -27,6 +29,15 @@ export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
   const [error, setError] = useState<string | null>(null);
 
   const toggleEdit = () => setIsEditing((current) => !current);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      imageUrl: initialData?.imageUrl || "",
+    },
+  });
+
+  // const { isSubmitting, setIsSubmitting } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -84,10 +95,10 @@ export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
           <div>
             <FileUpload
               endpoint="courseImage"
-              onChangeAction={async (url) => {
+              onChange={(url) => {
                 if (url) {
                   try {
-                    await onSubmit({ imageUrl: url });
+                    onSubmit({ imageUrl: url });
                   } catch {
                     toast.error("Failed to upload image");
                   }
