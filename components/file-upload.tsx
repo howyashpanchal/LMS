@@ -7,9 +7,14 @@ import toast from "react-hot-toast";
 interface FileUploadProps {
   onChange: (url?: string) => void;
   endpoint: keyof typeof ourFileRouter;
+  onUploadError?: (error: Error) => void;
 }
 
-export const FileUpload = ({ onChange, endpoint }: FileUploadProps) => {
+export const FileUpload = ({
+  onChange,
+  endpoint,
+  onUploadError,
+}: FileUploadProps) => {
   return (
     <>
       <UploadDropzone
@@ -20,6 +25,7 @@ export const FileUpload = ({ onChange, endpoint }: FileUploadProps) => {
           console.log("File uploaded successfully:", res);
         }}
         onUploadError={(error: Error) => {
+          onUploadError?.(error);
           toast.error(`${error?.message}`);
         }}
       />
