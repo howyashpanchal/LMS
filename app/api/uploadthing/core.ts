@@ -1,5 +1,6 @@
+import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
-import { createUploadthing, type FileRouter } from "uploadthing/next";
+import { createUploadthing} from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 
 const f = createUploadthing();
@@ -30,11 +31,25 @@ export const ourFileRouter = {
     //     console.log("Upload complete for userId:", metadata.userId);
     // }),
 
-    // chapterVideo : f({video : {maxFileSize : "512GB" , maxFileCount : 1}})
-    // .middleware(() => handleAuth())
-    // .onUploadComplete(async ({ metadata }) => {
-    //     console.log("Upload complete for userId:", metadata.userId);
-    // }),
+    chapterVideo : f({video : {maxFileSize : "512GB" , maxFileCount : 1}})
+    .middleware(async () => {
+        const {userId} = await auth();
+        if (!userId) throw new UploadThingError("Unauthorized");
+        return {userId};
+    })
+    .onUploadComplete(async ({ file, metadata }) => {
+        console.log("Upload complete for userId:", metadata.userId);
+        console.log("File URL", file.url);
+        console.log("Metadata:", metadata);
+
+        await db.video.create({
+            data : {
+                name : file.name,
+                url: file.url,
+                userId: metadata.userId,
+            }
+        })
+    }),
     imageUploader : f({
         image:{
             maxFileSize : "4MB",
@@ -50,7 +65,11 @@ export const ourFileRouter = {
         console.log("Uploaded by user ID:", metadata.userId);
         
         return { uploadedBy: metadata.userId };
-    })
-} satisfies FileRouter;
+    }),
+};
+
+// Add console.log statements outside the object
+console.log("Middleware executed");
+console.log("File uploaded:", File);
 
 export type OurFileRouter = typeof ourFileRouter;
