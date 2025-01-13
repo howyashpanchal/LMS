@@ -16,11 +16,13 @@ import { CategoryForm } from "./_components/category-form";
 import { PriceForm } from "./_components/price-form";
 import { AttachmentForm } from "./_components/resource-attachment-form";
 import { ChapterForm } from "./_components/chapter-form";
+import { Banner } from "@/components/banner";
+import { Action } from "./_components/action";
 
 export default async function CourseIDPage({
   params,
 }: {
-  params: { courseId: string };
+  params: { courseId: string; isPublished: boolean };
 }) {
   const { userId } = await auth();
   if (!userId) {
@@ -71,8 +73,13 @@ export default async function CourseIDPage({
 
   const progress = `(${completedFields}/${totalFields})`;
 
+  const isComplete = requireFields.every(Boolean);
+
   return (
     <>
+      {!course.isPublished && (
+        <Banner label="Course is Unpublished, It'll not be visible to the students" />
+      )}
       <div className="p-6">
         <div className="flex items-center justify-between">
           <div className="flex flex-col gap-y-2">
@@ -81,6 +88,11 @@ export default async function CourseIDPage({
               Completed all fields {progress}
             </span>
           </div>
+          <Action
+            disabled={!isComplete}
+            courseId={params.courseId}
+            isPublished={params.isPublished}
+          />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
           <div>
