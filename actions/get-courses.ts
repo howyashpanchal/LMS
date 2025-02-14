@@ -56,13 +56,15 @@ export const getCourses = async ({
                     return {
                         ...course,
                         progress : null,
+                        chapters : { id: course.chapter.map(ch => ch.id) },
                     }
                 }
                 const progressPercentage = await getProgress(userId, course.id);
 
                 return ({
                     ...course,
-                    progress : progressPercentage
+                    progress : progressPercentage,
+                    chapters : { id: course.chapter.map(ch => ch.id) },
                 })
             })
         )
