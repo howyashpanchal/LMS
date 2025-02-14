@@ -34,7 +34,7 @@ export const NavbarRoutes = () => {
             </Button>
           </Link>
         )}
-        <UserButton afterSwitchSessionUrl="/ " />
+        <UserButton afterSwitchSessionUrl="/" />
       </div>
     </>
   );
