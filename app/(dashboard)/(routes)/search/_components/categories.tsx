@@ -26,7 +26,7 @@ const iconMap: Record<Category["name"], IconType> = {
   Photography: FcCamera,
 };
 
-export const Categories = async ({ items }: CategoriesProps) => {
+export const Categories = ({ items }: CategoriesProps) => {
   return (
     <>
       <div className="flex items-center gap-x-2 overflow-x-auto pb-2">
